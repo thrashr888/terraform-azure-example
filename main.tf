@@ -7,11 +7,20 @@ provider "azurerm" {
 variable "prefix" {
   default = "hashicorp-example"
 }
+variable "username" {
+  default = "thrashr888"
+}
+variable "password" {
+  default = "Password1234!"
+}
+variable "vm_size" {
+  default = "Standard_B1s"
+}
 
 # Create a resource group
 resource "azurerm_resource_group" "main" {
   name     = "${var.prefix}-resources"
-  location = "West US 2"
+  location = "West US"
 }
 
 resource "azurerm_virtual_network" "main" {
@@ -45,7 +54,7 @@ resource "azurerm_virtual_machine" "main" {
   location              = "${azurerm_resource_group.main.location}"
   resource_group_name   = "${azurerm_resource_group.main.name}"
   network_interface_ids = ["${azurerm_network_interface.main.id}"]
-  vm_size               = "Standard_DS1_v2"
+  vm_size               = "${var.vm_size}"
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
   delete_os_disk_on_termination = true
@@ -67,8 +76,8 @@ resource "azurerm_virtual_machine" "main" {
   }
   os_profile {
     computer_name  = "hostname"
-    admin_username = "testadmin"
-    admin_password = "Password1234!"
+    admin_username = "${var.username}"
+    admin_password = "${var.password}"
 
     custom_data = "echo 'init test'"
   }
@@ -77,7 +86,7 @@ resource "azurerm_virtual_machine" "main" {
 
     ssh_keys {
       key_data = file("~/.ssh/azure_rsa.pub")
-      path = "/home/{username}/.ssh/authorized_keys"
+      path = "/home/${var.username}/.ssh/authorized_keys"
     }
   }
   tags = {
