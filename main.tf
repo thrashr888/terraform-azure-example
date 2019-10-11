@@ -16,6 +16,9 @@ variable "password" {
 variable "vm_size" {
   default = "Standard_B1s"
 }
+variable "public_key" {
+  default = ""
+}
 
 # Create a resource group
 resource "azurerm_resource_group" "main" {
@@ -85,7 +88,7 @@ resource "azurerm_virtual_machine" "main" {
     disable_password_authentication = true
 
     ssh_keys {
-      key_data = file("~/.ssh/azure_rsa.pub")
+      key_data = "${var.public_key}"
       path = "/home/${var.username}/.ssh/authorized_keys"
     }
   }
