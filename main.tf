@@ -11,7 +11,7 @@ variable "username" {
   default = "thrashr888"
 }
 variable "password" {
-  default = "!Password1234!"
+  default = "Password1234!"
 }
 variable "vm_size" {
   default = "Standard_B1s"
